@@ -27,8 +27,13 @@ jobs:
         id: pmd
         uses: pmd/pmd-github-action@v2
         with:
-          rulesets:  'category/java/errorprone.xml'
+          rulesets: 'category/java/errorprone.xml'
+      - name: Fail build if there are violations
+        if: steps.pmd.outputs.violations > 8
+        run: exit 1
+            
       - name: Upload SARIF file
+        if: always() 
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: pmd-report.sarif
