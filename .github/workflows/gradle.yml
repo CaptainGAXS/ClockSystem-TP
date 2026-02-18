@@ -29,11 +29,6 @@ jobs:
     env:
       DISPLAY: ":99.0"
 
-    services:
-      xvfb:
-        image: selenium/standalone-chrome:latest
-        options: -e VNC_SERVER=true -e VNC_PORT=5900
-
     steps:
     - uses: actions/checkout@v6
     - name: Set up JDK ${{ matrix.version }}
@@ -42,8 +37,12 @@ jobs:
         java-version: ${{ matrix.version }}
         distribution: 'temurin'
     
+    # Only run Xvfb on Linux
     - name: Start Xvfb
-      run: Xvfb $DISPLAY -ac -screen 0 1600x1200x24 > /dev/null 2>&1 &
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get install xvfb
+        Xvfb $DISPLAY -ac -screen 0 1600x1200x24 > /dev/null 2>&1 &
 
     # Configure Gradle for optimal use in GitHub Actions, including caching of downloaded dependencies.
     # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
