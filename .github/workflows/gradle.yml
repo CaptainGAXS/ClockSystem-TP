@@ -27,11 +27,21 @@ jobs:
     permissions:
       contents: read
     
+    services:
+      xvfb:
+        image: selenium/standalone-chrome:latest
+        options: -e VNC_SERVER=true -e VNC_PORT=5900
+
     env:
       DISPLAY: ":99.0"
 
     steps:
     - uses: actions/checkout@v6
+    
+    - name: Start Xvfb
+      if: runner.os == 'Linux'
+      run: /usr/bin/Xvfb $DISPLAY -screen 0 1280x1024x24 &
+
     - name: Set up JDK ${{ matrix.version }}
       uses: actions/setup-java@v5
       with:
@@ -47,14 +57,7 @@ jobs:
         gradle-version: '9.3.1'
 
     - name: Build with Gradle
-      run: |
-        if [ "$RUNNER_OS" == "Linux" ]; then
-          sudo apt-get update
-          sudo apt-get install -y xvfb
-          xvfb-run --auto-servernum gradle build
-        else
-          gradle build
-        fi
+      run: gradle build
 
     - name: Test Report
       if: always()
@@ -64,7 +67,7 @@ jobs:
 
         # A file, directory or wildcard pattern that describes what to upload
         # Required.
-        path: app/build/libs/*
+        path: app/build/reports/tests
         # The desired behavior if no files are found using the provided path.
         # Available Options:
         #   warn: Output a warning but do not fail the action
