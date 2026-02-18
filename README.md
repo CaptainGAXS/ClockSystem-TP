@@ -1,4 +1,5 @@
 ![Gradle Build](https://github.com/CaptainGAXS/ClockSystem-TP/actions/workflows/gradle.yml/badge.svg)
+![PMD Analysis](https://github.com/CaptainGAXS/ClockSystem-TP/actions/workflows/pmd-analysis.yml/badge.svg)
 
 # ClockSystem
 
