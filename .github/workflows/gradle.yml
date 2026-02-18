@@ -60,14 +60,6 @@ jobs:
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: test-report-${{ matrix.os }}-${{ matrix.version }}
-        path: app/build/reports/tests
-    
-
-    - uses: actions/upload-artifact@v4
-      with:
-        # Name of the artifact to upload.
-        # Optional. Default is 'artifact'
         name: build-artifact-${{ matrix.os }}
 
         # A file, directory or wildcard pattern that describes what to upload
