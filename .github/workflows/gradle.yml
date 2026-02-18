@@ -18,6 +18,7 @@ jobs:
   build:
 
     strategy:
+      fail-fast: false
       matrix:
         version: [25]
         os: [ubuntu-latest, macos-latest, windows-latest]
@@ -40,7 +41,7 @@ jobs:
     # Only run Xvfb on Linux
     - name: Start Xvfb
       if: runner.os == 'Linux'
-      run: |
+      run:
         sudo apt-get install xvfb
         Xvfb $DISPLAY -ac -screen 0 1600x1200x24 > /dev/null 2>&1 &
 
@@ -58,7 +59,7 @@ jobs:
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: test-report
+        name: test-report-${{ matrix.os }}-${{ matrix.version }}
         path: app/build/reports/tests
 
 
